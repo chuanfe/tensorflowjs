@@ -3,18 +3,6 @@ import * as tf from '@tensorflow/tfjs';
 function linear_regression(tx, ty) {
   var results = [];
 
-  tf.tensor([1, 2, 3, 4]).print();
-
-  tf.tensor([[1, 2], [3, 4]]).print();
-
-  tf.tensor([1, 2, 3, 4], [2, 2]).print();
-
-  tf.tensor1d([1, 2, 3]).print();
-
-  tf.tensor2d([[1, 2], [3, 4]]).print();
-
-  tf.tensor3d([[[1], [2]], [[3], [4]]]).print();
-
   // 训练初始数据
   const train_x = tf.tensor1d(tx);
   const train_y = tf.tensor1d(ty);
@@ -32,6 +20,7 @@ function linear_regression(tx, ty) {
   
   // 优化器
   const optimizer = tf.train.adam(learningRate);
+  console.log('optimizer', optimizer);
   // 损失函数
   const loss = (pred, label) => pred.sub(label).square().mean();
   // 训练模型
