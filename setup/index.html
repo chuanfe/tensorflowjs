@@ -3,11 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <script src="./js/line.js" type="text/javascript"></script>
+    <style>
+        a {
+            text-decoration: none;
+            color: #595959;
+        }
+        a.active, a:hover {
+            color: #25b864;
+        }
+        .func-list {
+            list-style-type: none;
+        }
+        .func-list li {
+            display: inline-block;
+        }
+        .func-iframe {
+            width: 100%;
+            border: solid 1px #eee;
+        }
+    </style>
 </head>
 <body>
-    
+    <ul id="funcList" class="func-list">
+        <li><a href="javascript:;" data-file="linear_regression">线性回归</a></li>
+        <li><a href="javascript:;" data-file="logistic_regression">逻辑回归</a></li>
+    </ul>
+    <iframe id="funcIframe" class="func-iframe" src="" frameborder="0"></iframe>
+    <script>
+        const funcList = document.getElementById('funcList');
+        funcList.addEventListener("click", function(e) {
+            for(let i = 0; i < funcList.children.length; i++) {
+                const item = funcList.children[i];
+                item.children[0].classList.remove('active')
+            }
+            e.target.className = 'active';
+            const fileName = e.target.getAttribute('data-file');
+            console.log('click', fileName);
+            document.getElementById("funcIframe").src = `./${fileName}/index.html`;
+        }, false)
+    </script>
 </body>
 </html>
