@@ -17,15 +17,13 @@ function logistic_regression(train_data, train_label) {
 
     // 训练初始数据
     const train_x = tf.tensor2d(train_data);
-    const train_y = tf.tensor1d(train_label);
-
+    const train_y = tf.tensor1d(train_label, 'int32');
     function predict(x) {
         return tf.softmax(tf.add(tf.matMul(x, w), b));
     }
 
     function loss(predictions, labels) {
         const y = tf.oneHot(labels, number_of_labels);
-        // const entropy = tf.mean(tf.sub(tf.scalar(1), tf.sum((tf.mul(y, tf.log(predictions)))))
         const entropy = tf.mean(tf.sub(tf.scalar(1), tf.sum(tf.mul(y, tf.log(predictions)), 1)));
         return entropy;
     }
@@ -36,11 +34,6 @@ function logistic_regression(train_data, train_label) {
             loss_var.print();
             return loss_var;
         })
-        // const result = {};
-        // result.a = w.dataSync()[0];
-        // result.b = b.dataSync()[0];
-        // // result.f = x => result.a * x + result.b;
-        // results.push(result);
     }
 
     return function(x) {
@@ -50,8 +43,7 @@ function logistic_regression(train_data, train_label) {
     }
 }
 
-const regression_model = logistic_regression([[1,2],[3,4],[5,6],[6,7]],[0,0,1,1]);
+// 训练结果
+const regression_model = logistic_regression([[1,2],[1,3],[2,3],[2,4],[2,1],[3,2],[3,1],[4,3]],[1,1,1,1,0,0,0,0]);
 
-// regression_model.map((model) => {
-//   console.log('@@@@', model);
-// })
+console.log('[3,4],[6,7],[4,3],[7,6] 预测结果：', regression_model([[3,4],[6,7],[4,3],[7,6]]));
