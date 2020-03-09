@@ -17,7 +17,7 @@ function logistic_regression(train_data, train_label) {
 
     // 训练初始数据
     const train_x = tf.tensor2d(train_data);
-    const train_y = tf.tensor1d(train_label, 'int32');
+    const train_y = tf.tensor1d(train_label, 'int32'); //oneHot 第二个参数格式要求int32
     function predict(x) {
         return tf.softmax(tf.add(tf.matMul(x, w), b));
     }

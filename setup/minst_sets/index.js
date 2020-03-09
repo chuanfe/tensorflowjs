@@ -1,4 +1,4 @@
-require('babel-polyfill')
+require('babel-polyfill');
 const MnistData = require('./mnist').MnistData;
 
 let data;

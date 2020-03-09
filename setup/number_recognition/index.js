@@ -1,9 +1,9 @@
-require('babel-polyfill')
+import * as tf from '@tensorflow/tfjs';
+require('babel-polyfill');
 const MnistData = require('./mnist').MnistData;
 
 let data;
-const batch_size = 10;
-const chart = document.getElementById('chart');
+
 async function load() {
   data = new MnistData();
   await data.load();
@@ -13,32 +13,53 @@ async function mnist() {
   await load();
   console.log("Data loaded!");
 }
-mnist().then(function () {
-  const batch = data.nextTrainBatch(batch_size);
-  // 使用train_data数据
-  console.log('batch', batch);
-  for (let iter = 0; iter < batch_size; iter++) {
-    const image = batch.xs.slice([iter, 0], [1, batch.xs.shape[1]]);
-    const canvas = document.createElement('canvas');
-    chart.appendChild(canvas);
-    draw(image, canvas);
-  }
-});
 
-// 绘制canvas
-function draw(image, canvas) {
-  const [width, height] = [28, 28];
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext('2d');
-  const imageData = new ImageData(width, height);
-  const data = image.dataSync();
-  for (let i = 0; i < height * width; ++i) {
-    const j = i * 4;
-    imageData.data[j + 0] = data[i] * 255;
-    imageData.data[j + 1] = data[i] * 255;
-    imageData.data[j + 2] = data[i] * 255;
-    imageData.data[j + 3] = 255;
+mnist().then(function(){
+  console.log('*****', data);
+  const train_result = number_recognition(data);
+  console.log('####', train_result);
+})
+
+function number_recognition(train_data) {
+  const batch_size = 10;
+  const numIterations = 100;
+  const number_of_labels = 10;
+  let loss_results = [];
+
+  // 优化器
+  const learningRate = 0.15;
+  const optimizer = tf.train.sgd(learningRate);
+
+  const w = tf.variable(tf.zeros([784, number_of_labels]));
+  const b = tf.variable(tf.zeros([number_of_labels]));
+
+  function predict(x) {
+    return tf.softmax(tf.add(tf.matMul(x, w), b));
   }
-  ctx.putImageData(imageData, 0, 0);
+
+  function loss(predictions, labels) {
+    const entropy = tf.mean(tf.sub(tf.scalar(1), tf.sum(tf.mul(labels, tf.log(predictions)), 1)));
+    return entropy;
+  }
+
+  for (let iter = 0; iter < numIterations; iter++) {
+    const batch = train_data.nextTrainBatch(batch_size);
+    const train_x = batch.xs;
+    const train_y = batch.labels;
+    optimizer.minimize(() => {
+      const loss_var = loss(predict(train_x), train_y);
+      loss_results.push({
+        x: new Date().getTime(),
+        y: loss_var.dataSync()[0]
+      });
+      return loss_var;
+    })
+    train_x.dispose();
+    train_y.dispose();
+  }
+
+  return { 
+    model : predict,
+    loss : loss_results
+  };
 }
