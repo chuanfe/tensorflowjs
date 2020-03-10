@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      background-color: #eee;
+      margin-top: 10px;
+    }
+
+    #control {
+      margin: 5px
+    }
+
+    #chart {
+      margin: 5px
+    }
+  </style>
+  <link rel="stylesheet" href="../libs/twitter-bootstrap/4.0.0/css/css/bootstrap.css">
+</head>
+
+<body>
+  <div class="container">
+    <div id="control" class="row">
+      <div class="col-sm">
+        <button type="button" class="btn btn-outline-primary btn-sm" id="train_btn" disabled>Train</button>
+      </div>
+      <div class="input-group input-group-sm col-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-sm">Batch Size</span>
+        </div>
+        <input type="number" value=16 class="form-control" id="batch_size_input">
+      </div>
+      <div class="input-group input-group-sm col-sm">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-sm">Iterations</span>
+        </div>
+        <input type="number" value=100 class="form-control" id="iteration_number_input">
+      </div>
+    </div>
+    <div id="chart" class="row">
+      <canvas id="loss_chart" width="400" height="200"></canvas>
+    </div>
+    <div id="result" class="row">
+    </div>
+  </div>
+  <script src="./index2.js" type="text/javascript"></script>
+</body>
+
+</html>
